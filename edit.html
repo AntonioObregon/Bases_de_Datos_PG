@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<meta name="viewport" id="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+<script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" charset="utf-8">
+
+function getUrlVars() {
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for (var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
+
+        $(document).ready(function(){
+            var id = decodeURI(parseInt(getUrlVars()["id"]));
+            var hermano = decodeURI(getUrlVars()["hermano"]);
+            var regalo = decodeURI(getUrlVars()["regalo"]);
+            $("#id").text(id);
+            $("#hermano").val(hermano);
+            $("#regalo").val(regalo);
+
+        });
+
+
+        $(document).ready(function(){
+
+var myDB;
+//Open Database Connection
+document.addEventListener("deviceready",onDeviceReady,false);
+function onDeviceReady(){
+myDB = window.sqlitePlugin.openDatabase({name: "navidad.db", location: 'default'});
+}
+
+
+//Actualización
+$("#update").click(function(){
+  var id=$("#id").text();
+  var hermano=$("#hermano").val();
+  var regalo=$("#regalo").val()
+  myDB.transaction(function(transaction) {
+    var executeQuery = "UPDATE regalos SET hermano=?, regalo=? WHERE id=?";
+    transaction.executeSql(executeQuery, [hermano,regalo,id],
+      //On Success
+      function(tx, result) { alert('Datos actualizados con éxtio');},
+      //On Error
+      function(error){alert('Ocurrió un error');});
+  });
+});
+
+
+
+});
+
+
+</script>
+
+<style>
+*{
+	font-family: Verdana;
+	padding: 0% 1%;
+}
+
+body{background-color: #146b3a; }
+
+
+img{
+    width: 50%;
+    height: auto;
+    display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+}
+
+#update{background-image: url(botoneliminar.png); font-weight: bold; font-size: 200%; color: #993a3a; width: 100%;}
+
+.regresar{
+
+width: 100%;  
+height: auto;
+background-color: #993a3a;
+padding: 1% 0%;
+
+}
+
+.regresar a{ margin-left:40%; text-decoration: none; color: azure; font-weight: bold; font-size: 110%;}
+</style>
+
+</head>
+<body>
+	<center>
+<h1 style="color: white;">Hermanos y regalos</h1>
+	</center>
+
+  <div class="regresar">
+        <a href="index.html">Regresar</a>
+  </div>
+      <h2 style="color: white;">Actualizar tabla</h2>
+ 
+      <p style="color: white; font-size: 120%;">ID:</p> <span id="id" style="color: white; font-size: 120%;"></span>
+    <p></p>
+      <label for="hermano" style="color: white; font-size: 120%;">Hermano</label>     
+      <input type="text" id="hermano" placeholder="Nombre Hermano" value="" style="width: 96%; font-size: 120%;">
+      <p></p>
+      <label for="regalo" style="color: white; font-size: 120%;">¿Que le regalaré?</label>	
+      <input type="text" id="regalo" placeholder="Regalo" style="width: 96%; font-size: 120%;">
+      <p></p>
+    <button id="update" class="button button-block">Actualizar</button>
+
+
+		<p></p>
+		<img src="gift-flat.png">   
+
+	</body>
+</html>
